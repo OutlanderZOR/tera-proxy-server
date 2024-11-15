@@ -48,8 +48,9 @@ function RunProxy(ModuleFolder, ProxyConfig) {
     let proxy = new TeraProxy(ModuleFolder, DataFolder, ProxyConfig);
     try {
         // Switch to highest process priority so we don't starve because of game client using all CPU
-        const { setHighestProcessPriority } = require("./utils");
-        setHighestProcessPriority();
+        // Not required on a dedicated server context.
+        //const { setHighestProcessPriority } = require("./utils");
+        //setHighestProcessPriority();
 
         // Start proxy
         proxy.run();
@@ -59,28 +60,30 @@ function RunProxy(ModuleFolder, ProxyConfig) {
     }
 
     // Set up clean exit
-    const isWindows = process.platform === 'win32';
+    // const isWindows = process.platform === 'win32';
 
     function cleanExit() {
         console.log(mui.get('loader-cli/terminating'));
 
         proxy.destructor();
-        proxy = null;
+        //proxy = null;
 
-        if (isWindows)
-            process.stdin.pause();
+        // if (isWindows)
+        //     process.stdin.pause();
+        process.exit(0);
     }
 
-    if (isWindows) {
-        require('readline').createInterface({
-            input: process.stdin,
-            output: process.stdout
-        }).on('SIGINT', () => process.emit('SIGINT'));
-    }
+    // if (isWindows) {
+    //     require('readline').createInterface({
+    //         input: process.stdin,
+    //         output: process.stdout
+    //     }).on('SIGINT', () => process.emit('SIGINT'));
+    // }
 
     process.on('SIGHUP', cleanExit);
     process.on('SIGINT', cleanExit);
     process.on('SIGTERM', cleanExit);
+    
 }
 
 // Main

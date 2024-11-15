@@ -37,20 +37,26 @@ function setNormalProcessPriority() {
     os.setPriority(os.constants.priority.PRIORITY_NORMAL);
 }
 
-// See https://github.com/sindresorhus/is-admin
+// // See https://github.com/sindresorhus/is-admin
+// function isAdmin() {
+    // const { exec } = require('child_process');
+    // return new Promise((resolve, reject) => {
+        // exec('fsutil dirty query %systemdrive%', (err, so, se) => {
+            // if (!err) {
+                // resolve(true);
+            // } else {
+                // if (err.code === 1)
+                    // resolve(false);
+                // else
+                    // reject(err);
+            // }
+        // });
+    // });
+// }
+// Support linux
 function isAdmin() {
-    const { exec } = require('child_process');
-    return new Promise((resolve, reject) => {
-        exec('fsutil dirty query %systemdrive%', (err, so, se) => {
-            if (!err) {
-                resolve(true);
-            } else {
-                if (err.code === 1)
-                    resolve(false);
-                else
-                    reject(err);
-            }
-        });
+    return new Promise((resolve) => {
+        resolve(true);
     });
 }
 
